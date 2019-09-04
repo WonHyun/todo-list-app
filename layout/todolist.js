@@ -11,6 +11,7 @@ import {
 import Todo from '../component/todo';
 import {Icon} from 'react-native-elements';
 import uuid from 'uuid/v1';
+import moment from 'moment';
 
 const {width} = Dimensions.get('window');
 
@@ -30,6 +31,7 @@ export default class TodoList extends React.Component {
 
   _addTodo = () => {
     const _id = uuid();
+    const now = moment().format('YYYY[-]MM[-]DD');
     const newTodo = {
       [_id]: {
         id: _id,
@@ -39,7 +41,7 @@ export default class TodoList extends React.Component {
             : 'New Todo Title',
         description: '',
         dueDate: '',
-        createdAt: Date.now(),
+        createdAt: now,
         priority: '3',
         isCompleted: false,
       },

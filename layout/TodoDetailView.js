@@ -4,23 +4,24 @@ import {
   Text,
   View,
   TextInput,
-  ScrollView,
   Modal,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {Calendar} from 'react-native-calendars';
-
-const {height, width} = Dimensions.get('window');
 
 export default class TodoDetailView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isModalVisible: false,
+      dueDateMark: {
+        [this.props.todo.dueDate]: {
+          selected: true,
+          selectedColor: '#9bc53b',
+        },
+      },
     };
-    console.log(props);
   }
 
   _toggleModalVisible = () => {
@@ -33,6 +34,16 @@ export default class TodoDetailView extends React.Component {
         }),
       0,
     );
+  };
+
+  _changeMark = day => {
+    const newMark = {
+      [day.dateString]: {
+        selected: true,
+        selectedColor: '#9bc53b',
+      },
+    };
+    this.setState({dueDateMark: newMark});
   };
 
   render() {
@@ -100,16 +111,13 @@ export default class TodoDetailView extends React.Component {
               <Icon name="close" />
             </TouchableOpacity>
             <Calendar
-              current={() => {
-                // eslint-disable-next-line no-lone-blocks
-                {
-                  this.props.dueDate === '' ? Date.now() : this.props.dueDate;
-                }
-              }}
               onDayPress={day => {
                 this.props.changeDueDate(this.props.todo.id, day.dateString);
                 this._toggleModalVisible();
+                this._changeMark(day);
               }}
+              markedDates={this.state.dueDateMark}
+              minDate={this.props.todo.createdAt}
             />
           </View>
         </Modal>
