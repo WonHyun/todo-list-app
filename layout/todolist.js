@@ -58,7 +58,6 @@ export default class TodoList extends React.Component {
   };
 
   _deleteTodo = id => {
-    console.log(this.state);
     this.setState(prevState => {
       const todos = prevState.todos;
       delete todos[id];
@@ -67,8 +66,6 @@ export default class TodoList extends React.Component {
   };
 
   _completeToggle = (id, currentCompleteState) => {
-    console.log(this.state);
-    console.log(id);
     this.setState(prevState => {
       const newState = {
         ...prevState,
@@ -148,7 +145,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#723d46',
+    backgroundColor: '#5c3735',
     padding: 5,
     elevation: 5,
   },
