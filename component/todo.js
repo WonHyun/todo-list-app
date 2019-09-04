@@ -28,6 +28,14 @@ export default class Todo extends React.Component {
     });
   };
 
+  _openDetailEdit = () => {
+    this.setState(prevState => {
+      return {
+        isDetailViewOpen: true,
+      };
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -55,23 +63,43 @@ export default class Todo extends React.Component {
               {this.props.todo.title}
             </Text>
           </TouchableOpacity>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
-              <Icon name="create" color="#bbbbbb" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.props.deleteTodo(this.props.todo.id)}>
-              <Icon name="delete" color="#bbbbbb" />
-            </TouchableOpacity>
-          </View>
+
+          {this.state.isEditMode ? (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={this._toggleEditMode}>
+                <Icon name="check" color="#bbbbbb" />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  this._toggleEditMode();
+                  this._openDetailEdit();
+                }}>
+                <Icon name="create" color="#bbbbbb" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.props.deleteTodo(this.props.todo.id)}>
+                <Icon name="delete" color="#bbbbbb" />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         {this.state.isDetailViewOpen ? (
           <View style={styles.detailView}>
             <TodoDetailView
-              isEditMode={this.state.isEditMode}
+              isEditable={this.state.isEditMode}
               todo={this.props.todo}
               toggleDetailViewVisible={this._toggleDetailViewVisible}
+              changeTitleText={this.props.changeTitleText}
+              changeDescriptionText={this.props.changeDescriptionText}
+              changePriority={this.props.changePriority}
+              changeDueDate={this.props.changeDueDate}
             />
           </View>
         ) : (

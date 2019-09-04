@@ -40,7 +40,7 @@ export default class TodoList extends React.Component {
         description: '',
         dueDate: '',
         createdAt: Date.now(),
-        priority: 3,
+        priority: '3',
         isCompleted: false,
       },
     };
@@ -81,7 +81,71 @@ export default class TodoList extends React.Component {
     });
   };
 
-  _changeTitleText = text => {
+  _changeTitleText = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            title: text,
+          },
+        },
+      };
+      return {...newState};
+    });
+  };
+
+  _changeDescriptionText = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            description: text,
+          },
+        },
+      };
+      return {...newState};
+    });
+  };
+
+  _changePriority = (id, prior) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            priority: prior,
+          },
+        },
+      };
+      return {...newState};
+    });
+  };
+
+  _changeDueDate = (id, date) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            dueDate: date,
+          },
+        },
+      };
+      return {...newState};
+    });
+  };
+
+  _changeNewTitleText = text => {
     this.setState({newTodoTitle: text});
   };
 
@@ -95,7 +159,7 @@ export default class TodoList extends React.Component {
             autoCorrect={false}
             returnKeyType={'done'}
             value={this.state.newTodoTitle}
-            onChangeText={this._changeTitleText}
+            onChangeText={this._changeNewTitleText}
             onSubmitEditing={this._addTodo}
           />
           <TouchableOpacity style={styles.addButton} onPress={this._addTodo}>
@@ -111,6 +175,10 @@ export default class TodoList extends React.Component {
                 todo={todo}
                 deleteTodo={this._deleteTodo}
                 completeStateToggle={this._completeToggle}
+                changeTitleText={this._changeTitleText}
+                changeDescriptionText={this._changeDescriptionText}
+                changePriority={this._changePriority}
+                changeDueDate={this._changeDueDate}
               />
             ))
           ) : (
