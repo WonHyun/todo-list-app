@@ -106,7 +106,8 @@ export default class TodoList extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {this.state.todos ? (
+          {Object.keys(this.state.todos).length !== 0 ||
+          this.state.todos.constructor !== Object ? (
             Object.values(this.state.todos).map(todo => (
               <Todo
                 key={todo.id}
