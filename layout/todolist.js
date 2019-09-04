@@ -10,46 +10,77 @@ import {
 } from 'react-native';
 import Todo from '../component/todo';
 import {Icon} from 'react-native-elements';
+import uuid from 'uuid/v1';
 
 const {width} = Dimensions.get('window');
 
 export default class TodoList extends React.Component {
   state = {
-    todos: [],
     newTodoTitle: '',
+    todos: {},
   };
 
-  todoCallback = todoFromChild => {
-    this.setState(prevState => ({
-      todos: [todoFromChild, ...prevState.todos],
-    }));
+  componentDidMount = () => {
+    this._loadTodos();
+  };
+
+  _loadTodos = () => {
+    this.setState({});
   };
 
   _addTodo = () => {
+    const _id = uuid();
     const newTodo = {
-      title:
-        this.state.newTodoTitle !== ''
-          ? this.state.newTodoTitle
-          : 'New Todo Title',
-      description: '',
-      dueDate: '',
-      createdAt: Date.now(),
-      priority: 3,
-      isCompleted: false,
+      [_id]: {
+        id: _id,
+        title:
+          this.state.newTodoTitle !== ''
+            ? this.state.newTodoTitle
+            : 'New Todo Title',
+        description: '',
+        dueDate: '',
+        createdAt: Date.now(),
+        priority: 3,
+        isCompleted: false,
+      },
     };
-    this.setState(prevState => ({
-      todos: [newTodo, ...prevState.todos],
-      newTodoTitle: '',
-    }));
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          ...newTodo,
+        },
+        newTodoTitle: '',
+      };
+      return {...newState};
+    });
   };
 
-  _deleteTodo = createdAt => {
+  _deleteTodo = id => {
+    console.log(this.state);
     this.setState(prevState => {
-      const index = prevState.todos.findIndex(e => e.createdAt === createdAt);
-      prevState.todos.splice(index, 1);
-      return {
-        todos: [...prevState.todos],
+      const todos = prevState.todos;
+      delete todos[id];
+      return {...prevState, ...todos};
+    });
+  };
+
+  _completeToggle = (id, currentCompleteState) => {
+    console.log(this.state);
+    console.log(id);
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos: {
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            isCompleted: !currentCompleteState,
+          },
+        },
       };
+      return {...newState};
     });
   };
 
@@ -75,12 +106,13 @@ export default class TodoList extends React.Component {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {this.state.todos.length ? (
-            this.state.todos.map(todo => (
+          {this.state.todos ? (
+            Object.values(this.state.todos).map(todo => (
               <Todo
-                key={todo.createdAt}
+                key={todo.id}
                 todo={todo}
                 deleteTodo={this._deleteTodo}
+                completeStateToggle={this._completeToggle}
               />
             ))
           ) : (
