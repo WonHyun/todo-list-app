@@ -7,175 +7,19 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  AppState,
 } from 'react-native';
 import Todo from '../component/todo';
 import {Icon} from 'react-native-elements';
-import uuid from 'uuid/v1';
-import moment from 'moment';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const {width} = Dimensions.get('window');
 
 export default class TodoList extends React.Component {
-  state = {
-    appState: AppState.currentState,
-    newTodoTitle: '',
-    todos: {},
-  };
-
-  componentDidMount = () => {
-    AppState.addEventListener('change', this._handleAppStateChange);
-    this._loadTodos();
-  };
-
-  componentWillUnmount = () => {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  };
-
-  _handleAppStateChange = nextAppState => {
-    if (nextAppState === 'background') {
-      this._saveTodo(this.state.todos);
-    }
-    this.setState({appState: nextAppState});
-  };
-
-  _saveTodo = newTodos => {
-    AsyncStorage.setItem('todos', JSON.stringify(newTodos));
-  };
-
-  _loadTodos = async () => {
-    try {
-      const getSavedTodos = await AsyncStorage.getItem('todos');
-      let savedTodos = JSON.parse(getSavedTodos);
-      savedTodos = savedTodos === null ? {} : savedTodos;
-      this.setState({todos: savedTodos});
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  _addTodo = () => {
-    const _id = uuid();
-    const now = moment().format('YYYY[-]MM[-]DD');
-    const newTodo = {
-      [_id]: {
-        id: _id,
-        title:
-          this.state.newTodoTitle !== ''
-            ? this.state.newTodoTitle
-            : 'New Todo Title',
-        description: '',
-        dueDate: '',
-        createdAt: now,
-        priority: '3',
-        isCompleted: false,
-      },
+  constructor(props) {
+    super(props);
+    this.state = {
+      newTodoTitle: '',
     };
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          ...newTodo,
-        },
-        newTodoTitle: '',
-      };
-      return {...newState};
-    });
-  };
-
-  _deleteTodo = id => {
-    this.setState(prevState => {
-      const todos = prevState.todos;
-      delete todos[id];
-      const newState = {
-        ...prevState,
-        ...todos,
-      };
-      return {newState};
-    });
-  };
-
-  _completeToggle = (id, currentCompleteState) => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          [id]: {
-            ...prevState.todos[id],
-            isCompleted: !currentCompleteState,
-          },
-        },
-      };
-      return {...newState};
-    });
-  };
-
-  _changeTitleText = (id, text) => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          [id]: {
-            ...prevState.todos[id],
-            title: text,
-          },
-        },
-      };
-      return {...newState};
-    });
-  };
-
-  _changeDescriptionText = (id, text) => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          [id]: {
-            ...prevState.todos[id],
-            description: text,
-          },
-        },
-      };
-      return {...newState};
-    });
-  };
-
-  _changePriority = (id, prior) => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          [id]: {
-            ...prevState.todos[id],
-            priority: prior,
-          },
-        },
-      };
-      return {...newState};
-    });
-  };
-
-  _changeDueDate = (id, date) => {
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        todos: {
-          ...prevState.todos,
-          [id]: {
-            ...prevState.todos[id],
-            dueDate: date,
-          },
-        },
-      };
-      return {...newState};
-    });
-  };
+  }
 
   _changeNewTitleText = text => {
     this.setState({newTodoTitle: text});
@@ -192,27 +36,37 @@ export default class TodoList extends React.Component {
             returnKeyType={'done'}
             value={this.state.newTodoTitle}
             onChangeText={this._changeNewTitleText}
-            onSubmitEditing={this._addTodo}
+            onSubmitEditing={() => {
+              this.props.addTodo(this.state.newTodoTitle);
+              this._changeNewTitleText('');
+            }}
           />
-          <TouchableOpacity style={styles.addButton} onPress={this._addTodo}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              this.props.addTodo(this.state.newTodoTitle);
+              this._changeNewTitleText('');
+            }}>
             <Icon name="add" color="#bbbbbb" />
           </TouchableOpacity>
         </View>
-        <ScrollView>
-          {Object.keys(this.state.todos).length !== 0 ||
-          this.state.todos.constructor !== Object ? (
-            Object.values(this.state.todos).map(todo => (
-              <Todo
-                key={todo.id}
-                todo={todo}
-                deleteTodo={this._deleteTodo}
-                completeStateToggle={this._completeToggle}
-                changeTitleText={this._changeTitleText}
-                changeDescriptionText={this._changeDescriptionText}
-                changePriority={this._changePriority}
-                changeDueDate={this._changeDueDate}
-              />
-            ))
+        <ScrollView indicatorStyle="white">
+          {Object.keys(this.props.todos).length !== 0 ||
+          this.props.todos.constructor !== Object ? (
+            Object.values(this.props.todos)
+              .reverse()
+              .map(todo => (
+                <Todo
+                  key={todo.id}
+                  todo={todo}
+                  deleteTodo={this.props.deleteTodo}
+                  completeStateToggle={this.props.completeStateToggle}
+                  changeTitleText={this.props.changeTitleText}
+                  changeDescriptionText={this.props.changeDescriptionText}
+                  changePriority={this.props.changePriority}
+                  changeDueDate={this.props.changeDueDate}
+                />
+              ))
           ) : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>Add New To-Do</Text>
