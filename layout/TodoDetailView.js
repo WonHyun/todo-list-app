@@ -99,26 +99,27 @@ export default class TodoDetailView extends React.Component {
         </View>
 
         <Modal
-          style={styles.calendarModalContainer}
           transparent={true}
           animationType="fade"
           visible={this.state.isModalVisible}
           onRequestClose={this._toggleModalVisible}>
-          <View style={styles.calendarModal}>
-            <TouchableOpacity
-              style={styles.calendarCloseButton}
-              onPress={this._toggleModalVisible}>
-              <Icon name="close" />
-            </TouchableOpacity>
-            <Calendar
-              onDayPress={day => {
-                this.props.changeDueDate(this.props.todo.id, day.dateString);
-                this._toggleModalVisible();
-                this._changeMark(day);
-              }}
-              markedDates={this.state.dueDateMark}
-              minDate={this.props.todo.createdAt}
-            />
+          <View style={styles.calendarModalContainer}>
+            <View style={styles.calendarModal}>
+              <TouchableOpacity
+                style={styles.calendarCloseButton}
+                onPress={this._toggleModalVisible}>
+                <Icon name="close" />
+              </TouchableOpacity>
+              <Calendar
+                onDayPress={day => {
+                  this.props.changeDueDate(this.props.todo.id, day.dateString);
+                  this._toggleModalVisible();
+                  this._changeMark(day);
+                }}
+                markedDates={this.state.dueDateMark}
+                minDate={this.props.todo.createdAt}
+              />
+            </View>
           </View>
         </Modal>
         {this.props.isEditable ? (
@@ -162,14 +163,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(100,100,100,0.5)',
   },
   calendarModal: {
-    flex: 0.7,
+    flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: '#ffffff',
     padding: 30,
-    marginTop: 100,
+    marginVertical: 100,
     elevation: 5,
   },
   calendarCloseButton: {
