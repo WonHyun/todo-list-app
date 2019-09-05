@@ -59,7 +59,9 @@ export default class Todo extends React.Component {
                 this.props.todo.isCompleted
                   ? styles.CompletedTitleText
                   : styles.UncompletedTitleText
-              }>
+              }
+              numberOfLines={1}
+              ellipsizeMode="tail">
               {this.props.todo.title}
             </Text>
           </TouchableOpacity>

@@ -81,7 +81,6 @@ export default class TodoList extends React.Component {
         },
         newTodoTitle: '',
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -94,7 +93,6 @@ export default class TodoList extends React.Component {
         ...prevState,
         ...todos,
       };
-      //this._saveTodo(newState.todos);
       return {newState};
     });
   };
@@ -111,7 +109,6 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -128,7 +125,6 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -145,7 +141,6 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -162,7 +157,6 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -179,7 +173,6 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
