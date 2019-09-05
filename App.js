@@ -1,13 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View, StatusBar} from 'react-native';
+import {StyleSheet, View, StatusBar} from 'react-native';
 import TodoList from './layout/todolist';
+import AppTitleHeader from './component/AppTitleHeader';
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#472d30" />
-        <Text style={styles.title}>To-Do List</Text>
+        <StatusBar barStyle="light-content" backgroundColor="#5c3735" />
+        <AppTitleHeader />
         <TodoList />
       </View>
     );
@@ -20,11 +21,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#252525',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 50,
-    marginTop: 30,
-    marginBottom: 30,
-    color: '#ffffff',
   },
 });
