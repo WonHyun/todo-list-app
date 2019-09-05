@@ -6,6 +6,7 @@ import {
   TextInput,
   Modal,
   TouchableOpacity,
+  Picker,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {Calendar} from 'react-native-calendars';
@@ -74,13 +75,16 @@ export default class TodoDetailView extends React.Component {
           <View style={styles.priorityContainer}>
             <Text style={styles.text}>Priority : </Text>
             {this.props.isEditable ? (
-              <TextInput
-                style={styles.text}
-                value={this.props.todo.priority}
-                onChangeText={text =>
-                  this.props.changePriority(this.props.todo.id, text)
-                }
-              />
+              <Picker
+                style={styles.priorityPicker}
+                selectedValue={this.props.todo.priority}
+                onValueChange={itemValue =>
+                  this.props.changePriority(this.props.todo.id, itemValue)
+                }>
+                <Picker.Item label="1" value="1" />
+                <Picker.Item label="2" value="2" />
+                <Picker.Item label="3" value="3" />
+              </Picker>
             ) : (
               <Text style={styles.text}>{this.props.todo.priority}</Text>
             )}
@@ -205,5 +209,8 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 15,
     padding: 5,
+  },
+  priorityPicker: {
+    flex: 1,
   },
 });
