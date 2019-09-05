@@ -12,6 +12,15 @@ export default class Todo extends React.Component {
     };
   }
 
+  // update todo compoent when props or state changed
+  shouldComponentUpdate = (nextProps, nextState) => {
+    const isChanged =
+      this.props.todo !== nextProps.todo || this.state !== nextState
+        ? true
+        : false;
+    return isChanged;
+  };
+
   _toggleEditMode = () => {
     this.setState(prevState => {
       return {
