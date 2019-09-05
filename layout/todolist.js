@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  AppState,
 } from 'react-native';
 import Todo from '../component/todo';
 import {Icon} from 'react-native-elements';
@@ -18,12 +19,25 @@ const {width} = Dimensions.get('window');
 
 export default class TodoList extends React.Component {
   state = {
+    appState: AppState.currentState,
     newTodoTitle: '',
     todos: {},
   };
 
   componentDidMount = () => {
+    AppState.addEventListener('change', this._handleAppStateChange);
     this._loadTodos();
+  };
+
+  componentWillUnmount = () => {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  };
+
+  _handleAppStateChange = nextAppState => {
+    if (nextAppState === 'background') {
+      this._saveTodo(this.state.todos);
+    }
+    this.setState({appState: nextAppState});
   };
 
   _saveTodo = newTodos => {
@@ -67,7 +81,7 @@ export default class TodoList extends React.Component {
         },
         newTodoTitle: '',
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -80,7 +94,7 @@ export default class TodoList extends React.Component {
         ...prevState,
         ...todos,
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {newState};
     });
   };
@@ -97,7 +111,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -114,7 +128,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -131,7 +145,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -148,7 +162,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -165,7 +179,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
-      this._saveTodo(newState.todos);
+      //this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -194,20 +208,18 @@ export default class TodoList extends React.Component {
         <ScrollView>
           {Object.keys(this.state.todos).length !== 0 ||
           this.state.todos.constructor !== Object ? (
-            Object.values(this.state.todos)
-              .reverse()
-              .map(todo => (
-                <Todo
-                  key={todo.id}
-                  todo={todo}
-                  deleteTodo={this._deleteTodo}
-                  completeStateToggle={this._completeToggle}
-                  changeTitleText={this._changeTitleText}
-                  changeDescriptionText={this._changeDescriptionText}
-                  changePriority={this._changePriority}
-                  changeDueDate={this._changeDueDate}
-                />
-              ))
+            Object.values(this.state.todos).map(todo => (
+              <Todo
+                key={todo.id}
+                todo={todo}
+                deleteTodo={this._deleteTodo}
+                completeStateToggle={this._completeToggle}
+                changeTitleText={this._changeTitleText}
+                changeDescriptionText={this._changeDescriptionText}
+                changePriority={this._changePriority}
+                changeDueDate={this._changeDueDate}
+              />
+            ))
           ) : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>Add New To-Do</Text>
