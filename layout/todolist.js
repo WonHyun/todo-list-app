@@ -12,6 +12,7 @@ import Todo from '../component/todo';
 import {Icon} from 'react-native-elements';
 import uuid from 'uuid/v1';
 import moment from 'moment';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -25,8 +26,19 @@ export default class TodoList extends React.Component {
     this._loadTodos();
   };
 
-  _loadTodos = () => {
-    this.setState({});
+  _saveTodo = newTodos => {
+    AsyncStorage.setItem('todos', JSON.stringify(newTodos));
+  };
+
+  _loadTodos = async () => {
+    try {
+      const getSavedTodos = await AsyncStorage.getItem('todos');
+      let savedTodos = JSON.parse(getSavedTodos);
+      savedTodos = savedTodos === null ? {} : savedTodos;
+      this.setState({todos: savedTodos});
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   _addTodo = () => {
@@ -55,6 +67,7 @@ export default class TodoList extends React.Component {
         },
         newTodoTitle: '',
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -63,7 +76,12 @@ export default class TodoList extends React.Component {
     this.setState(prevState => {
       const todos = prevState.todos;
       delete todos[id];
-      return {...prevState, ...todos};
+      const newState = {
+        ...prevState,
+        ...todos,
+      };
+      this._saveTodo(newState.todos);
+      return {newState};
     });
   };
 
@@ -79,6 +97,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -95,6 +114,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -111,6 +131,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -127,6 +148,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -143,6 +165,7 @@ export default class TodoList extends React.Component {
           },
         },
       };
+      this._saveTodo(newState.todos);
       return {...newState};
     });
   };
@@ -171,18 +194,20 @@ export default class TodoList extends React.Component {
         <ScrollView>
           {Object.keys(this.state.todos).length !== 0 ||
           this.state.todos.constructor !== Object ? (
-            Object.values(this.state.todos).map(todo => (
-              <Todo
-                key={todo.id}
-                todo={todo}
-                deleteTodo={this._deleteTodo}
-                completeStateToggle={this._completeToggle}
-                changeTitleText={this._changeTitleText}
-                changeDescriptionText={this._changeDescriptionText}
-                changePriority={this._changePriority}
-                changeDueDate={this._changeDueDate}
-              />
-            ))
+            Object.values(this.state.todos)
+              .reverse()
+              .map(todo => (
+                <Todo
+                  key={todo.id}
+                  todo={todo}
+                  deleteTodo={this._deleteTodo}
+                  completeStateToggle={this._completeToggle}
+                  changeTitleText={this._changeTitleText}
+                  changeDescriptionText={this._changeDescriptionText}
+                  changePriority={this._changePriority}
+                  changeDueDate={this._changeDueDate}
+                />
+              ))
           ) : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>Add New To-Do</Text>
