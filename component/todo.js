@@ -75,7 +75,6 @@ export default class Todo extends React.Component {
           ) : (
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={styles.button}
                 onPress={() => {
                   this._toggleEditMode();
                   this._openDetailEdit();
