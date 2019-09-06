@@ -185,7 +185,7 @@ export default class App extends React.Component {
   };
 
   _findExpiredTodo = todos => {
-    let now = new Date(2020, 1, 1);
+    let now = new Date();
     let expired = [];
     Object.values(todos).map(todo => {
       if (todo.dueDate !== '') {
