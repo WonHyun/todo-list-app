@@ -54,7 +54,12 @@ export default class TodoList extends React.Component {
           {Object.keys(this.props.todos).length !== 0 ||
           this.props.todos.constructor !== Object ? (
             Object.values(this.props.todos)
-              .reverse()
+              .sort((a, b) => {
+                if (a.priority === b.priority) {
+                  return a.dueDate > b.dueDate;
+                }
+                return a.priority > b.priority;
+              })
               .map(todo => (
                 <Todo
                   key={todo.id}
