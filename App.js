@@ -11,6 +11,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       appState: AppState.currentState,
+      expiredTodos: [],
       todos: {},
     };
   }
@@ -40,7 +41,8 @@ export default class App extends React.Component {
       const getSavedTodos = await AsyncStorage.getItem('todos');
       let savedTodos = JSON.parse(getSavedTodos);
       savedTodos = savedTodos === null ? {} : savedTodos;
-      this.setState({todos: savedTodos});
+      const expiredTodos = await this._findExpiredTodo(savedTodos);
+      this.setState({todos: savedTodos, expiredTodos: expiredTodos});
     } catch (err) {
       console.log(err);
     }
@@ -68,6 +70,7 @@ export default class App extends React.Component {
           ...newTodo,
         },
       };
+      newState.expiredTodos = this._findExpiredTodo(newState.todos);
       return {...newState};
     });
   };
@@ -80,7 +83,23 @@ export default class App extends React.Component {
         ...prevState,
         ...todos,
       };
-      return {newState};
+      newState.expiredTodos = this._findExpiredTodo(newState.todos);
+      return {...newState};
+    });
+  };
+
+  _deleteManyTodo = todoList => {
+    this.setState(prevState => {
+      const todos = prevState.todos;
+      todoList.map(todo => {
+        delete todos[todo.id];
+      });
+      const newState = {
+        ...prevState,
+        ...todos,
+      };
+      newState.expiredTodos = this._findExpiredTodo(newState.todos);
+      return {...newState};
     });
   };
 
@@ -160,15 +179,35 @@ export default class App extends React.Component {
           },
         },
       };
+      newState.expiredTodos = this._findExpiredTodo(newState.todos);
       return {...newState};
     });
+  };
+
+  _findExpiredTodo = todos => {
+    let now = new Date(2020, 1, 1);
+    let expired = [];
+    Object.values(todos).map(todo => {
+      if (todo.dueDate !== '') {
+        let splited = todo.dueDate.split('-');
+        let dueDate = new Date(splited[0], splited[1] - 1, splited[2]);
+        if (dueDate < now) {
+          expired.push(todo);
+        }
+      }
+    });
+    return expired;
   };
 
   render() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#5c3735" />
-        <AppTitleHeader />
+        <AppTitleHeader
+          expiredTodos={this.state.expiredTodos}
+          deleteTodo={this._deleteTodo}
+          deleteManyTodo={this._deleteManyTodo}
+        />
         <TodoList
           todos={this.state.todos}
           addTodo={this._addTodo}
