@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(100,100,100,0.5)',
+    backgroundColor: 'rgba(20,20,20,0.5)',
   },
   calendarModal: {
     flex: 1,
