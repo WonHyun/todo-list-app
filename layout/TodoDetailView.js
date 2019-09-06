@@ -37,6 +37,7 @@ export default class TodoDetailView extends React.Component {
     );
   };
 
+  // change state of due date mark at each todo's calendar
   _changeMark = day => {
     const newMark = {
       [day.dateString]: {

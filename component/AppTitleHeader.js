@@ -12,7 +12,7 @@ import {
 import {Icon, Badge} from 'react-native-elements';
 import ExpiredTodo from '../component/ExpiredTodo';
 
-const {width} = Dimensions.get('window');
+const {width} = Dimensions.get('window'); // current app width
 
 export default class AppTitleHeader extends React.Component {
   constructor(props) {
@@ -32,10 +32,7 @@ export default class AppTitleHeader extends React.Component {
     return isChanged;
   };
 
-  _showAlert = () => {
-    this._toggleModalVisible();
-  };
-
+  // change modal visible that show expired todo's list
   _toggleModalVisible = () => {
     setTimeout(
       () =>
@@ -48,6 +45,7 @@ export default class AppTitleHeader extends React.Component {
     );
   };
 
+  // Are you sure delete all expired todos?
   _openClearAllAlert = () => {
     Alert.alert(
       'Delete All Expired Todo',
@@ -104,17 +102,11 @@ export default class AppTitleHeader extends React.Component {
 
         <View style={styles.container}>
           <Text style={styles.title}>TO-DO LIST</Text>
-          <TouchableOpacity onPress={this._showAlert}>
+          <TouchableOpacity onPress={this._toggleModalVisible}>
             {this.props.expiredTodos.length > 0 ? (
               <Badge
-                badgeStyle={styles.countBadge}
-                // eslint-disable-next-line react-native/no-inline-styles
-                containerStyle={{
-                  position: 'absolute',
-                  top: -6,
-                  right: -6,
-                  zIndex: 10,
-                }}
+                badgeStyle={styles.countBadgeText}
+                containerStyle={styles.countBadgeContainer}
                 value={this.props.expiredTodos.length}
               />
             ) : (
@@ -193,8 +185,14 @@ const styles = StyleSheet.create({
   modalButtonContainer: {
     flex: 1,
   },
-  countBadge: {
+  countBadgeText: {
     flex: 1,
     backgroundColor: 'red',
+  },
+  countBadgeContainer: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    zIndex: 10,
   },
 });

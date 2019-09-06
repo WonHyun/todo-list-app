@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
-import {Icon} from 'react-native-elements';
 
 export default class ExpiredTodo extends React.Component {
   constructor(props) {
@@ -8,6 +7,7 @@ export default class ExpiredTodo extends React.Component {
   }
 
   _openAlert = () => {
+    // making current selected expired todo's title
     let titleName = this.props.todo.title;
     if (titleName.length > 20) {
       titleName = titleName.substring(0, 20);

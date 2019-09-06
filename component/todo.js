@@ -21,6 +21,7 @@ export default class Todo extends React.Component {
     return isChanged;
   };
 
+  // toggle edit mode, you can edit todo's info when edit mode
   _toggleEditMode = () => {
     this.setState(prevState => {
       return {
@@ -37,6 +38,7 @@ export default class Todo extends React.Component {
     });
   };
 
+  //if detail vien was closed when edit mode, open detail view.
   _openDetailEdit = () => {
     this.setState(prevState => {
       return {
