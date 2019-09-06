@@ -213,7 +213,14 @@ export default class App extends React.Component {
       if (todo.dueDate !== '') {
         // convert date string to date type object
         let splited = todo.dueDate.split('-');
-        let dueDate = new Date(splited[0], splited[1] - 1, splited[2]);
+        let dueDate = new Date(
+          splited[0],
+          splited[1] - 1,
+          splited[2],
+          23,
+          59,
+          59,
+        );
         if (dueDate < now) {
           expired.push(todo);
         }
