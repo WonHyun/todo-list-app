@@ -9,7 +9,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
+import {Icon, Badge} from 'react-native-elements';
 import ExpiredTodo from '../component/ExpiredTodo';
 
 const {width} = Dimensions.get('window');
@@ -104,10 +104,25 @@ export default class AppTitleHeader extends React.Component {
 
         <View style={styles.container}>
           <Text style={styles.title}>TO-DO LIST</Text>
-          <TouchableOpacity
-            style={styles.notificationIconStyle}
-            onPress={this._showAlert}>
-            <Icon name="notifications" color="#fff" />
+          <TouchableOpacity onPress={this._showAlert}>
+            {this.props.expiredTodos.length > 0 ? (
+              <Badge
+                badgeStyle={styles.countBadge}
+                // eslint-disable-next-line react-native/no-inline-styles
+                containerStyle={{
+                  position: 'absolute',
+                  top: -6,
+                  right: -6,
+                  zIndex: 10,
+                }}
+                value={this.props.expiredTodos.length}
+              />
+            ) : (
+              <View />
+            )}
+            <View style={styles.notificationIconStyle}>
+              <Icon name="notifications" color="#fff" />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -177,5 +192,9 @@ const styles = StyleSheet.create({
   },
   modalButtonContainer: {
     flex: 1,
+  },
+  countBadge: {
+    flex: 1,
+    backgroundColor: 'red',
   },
 });
