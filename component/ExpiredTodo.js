@@ -15,7 +15,7 @@ export default class ExpiredTodo extends React.Component {
     }
     Alert.alert(
       'Delete Todo',
-      'Are you sure delete' + titleName + '?',
+      'Are you sure delete [' + titleName + '] ?',
       [
         {text: 'Cancel'},
         {

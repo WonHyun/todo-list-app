@@ -79,7 +79,11 @@ export default class AppTitleHeader extends React.Component {
                 <Icon name="close" />
               </TouchableOpacity>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Expired TODOs</Text>
+                <View style={styles.modalTitle}>
+                  <Text style={styles.modalTitleText} numberOfLines={1}>
+                    Expired TODOs
+                  </Text>
+                </View>
                 <View style={styles.modalScroll}>
                   <ScrollView style={styles.modalScroll}>
                     {this.props.expiredTodos.map(todo => (
@@ -167,16 +171,19 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     flex: 1,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 30,
-    fontFamily: 'sans-serif-light',
     backgroundColor: '#00adca',
-    color: '#fff',
     borderRadius: 10,
     margin: 10,
+    padding: 10,
     paddingHorizontal: 20,
     elevation: 3,
+  },
+  modalTitleText: {
+    color: '#fff',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 24,
+    fontFamily: 'sans-serif-light',
   },
   modalScroll: {
     flex: 5,
